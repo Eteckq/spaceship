@@ -14,11 +14,11 @@ function initSplatShader() {
   console.log("splat shader initialized");
 }
 
-function Splat(angle = 0) {
+function Splat(splatTexture) {
   // la texture est donnée en paramètre et stockée ici
   // elle est déjà chargée sur le GPU (carte graphique)
+  this.splatTexture = splatTexture;
   this.initParameters();
-  this.angle = angle
 
   var wo2 = 0.5 * this.width;
   var ho2 = 0.5 * this.height;
@@ -98,7 +98,7 @@ Splat.prototype.setParameters = function (elapsed) {
   this.time += 0.01 * elapsed;
   // on peut animer les splats ici. Par exemple :
   this.position[1] += 0.06; // permet de déplacer le splat vers le haut au fil du temps
-    this.position[0] += 0.0005 * this.angle; // permet de déplacer le splat sur l'axe X
+  //   this.position[0] += 0.02 * Math.sin(this.time); // permet de déplacer le splat sur l'axe X
 };
 
 Splat.prototype.sendUniformVariables = function () {
@@ -110,7 +110,7 @@ Splat.prototype.sendUniformVariables = function () {
 
     // how to send a texture:
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, initTexture('textures/missile.png'));
+    gl.bindTexture(gl.TEXTURE_2D, this.splatTexture);
     gl.uniform1i(splatShader.texUniform, 0);
   }
 };

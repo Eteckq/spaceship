@@ -327,7 +327,8 @@
 
 	  if (currentlyPressedKeys[32] && cooldown <= 0) { // SPACE
       cooldown = 15;
-      let newSplat = new Splat(10);
+      var tex = initTexture('textures/missile.png');
+      let newSplat = new Splat(tex);
       
 
       
