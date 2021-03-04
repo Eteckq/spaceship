@@ -257,13 +257,28 @@
 
     gl.enable(gl.BLEND); // transparence activ�e 
 
-    gl.useProgram(shootSample[0].shader());
-    for(let sample of shootSample){
-      sample.sendUniformVariables();
-      sample.draw();
+    if(shootSample.length > 0){
+      gl.enable(gl.BLEND); // transparence activ�e 
+      gl.useProgram(shootSample[0].shader());
+      
+      let alive = []
+
+      for(let sample of shootSample){
+
+        if(sample.position[1] > 1.5){
+          sample.clear()
+        } else {
+          alive.push(sample)
+          sample.sendUniformVariables();
+          sample.draw();
+        }
+
+      }
+
+      shootSample = alive
+      
+      gl.disable(gl.BLEND);
     }
-	  
-	  gl.disable(gl.BLEND);
 
 	  // dessin du vaisseau
 	  gl.useProgram(spaceship.shader());
@@ -313,8 +328,7 @@
 
 	  if (currentlyPressedKeys[32] && cooldown <= 0) { // SPACE
       cooldown = 15;
-      var tex = initTexture('textures/missile.png');
-      let newSplat = new Splat(tex);
+      let newSplat = new Splat(10);
       
 
       
