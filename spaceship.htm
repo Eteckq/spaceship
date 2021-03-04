@@ -255,15 +255,29 @@
 	  background.sendUniformVariables();
 	  background.draw();
 
-    gl.enable(gl.BLEND); // transparence activ�e 
+      if(shootSample.length > 0){
+        gl.enable(gl.BLEND); // transparence activ�e 
+        gl.useProgram(shootSample[0].shader());
+        
+        let alive = []
 
-    gl.useProgram(shootSample[0].shader());
-    for(let sample of shootSample){
-      sample.sendUniformVariables();
-      sample.draw();
-    }
-	  
-	  gl.disable(gl.BLEND);
+        for(let sample of shootSample){
+
+          if(sample.position[1] > 1.5){
+            sample.clear()
+          } else {
+            alive.push(sample)
+            sample.sendUniformVariables();
+            sample.draw();
+          }
+
+        }
+
+        shootSample = alive
+        
+        gl.disable(gl.BLEND);
+      }
+
 
 	  // dessin du vaisseau
 	  gl.useProgram(spaceship.shader());
