@@ -6,8 +6,9 @@
     <script type="text/javascript" src="src/utils/game-utils.js"></script>
     <script type="text/javascript" src="src/utils/fbo.js"></script>
     <script type="text/javascript" src="src/background.js"></script>
-    <script type="text/javascript" src="src/objects/modelObj.js"></script>
+    <script type="text/javascript" src="src/objects/plane.js"></script>
     <script type="text/javascript" src="src/objects/splat.js"></script>
+    <script type="text/javascript" src="src/objects/enemy.js"></script>
     <script type="text/javascript" src="src/app.js"></script>
 
     <script id="background-vs" type="x-shader/x-vertex">#version 300 es
@@ -153,7 +154,7 @@
 
 	  // exemple de modification de la hauteur du mod�le avec un simple timer
 	  // bien pour les petits effets, mais si possible modifier directement la
-	  // matrice model en amont (dans setParameters du fichier modelObj)
+	  // matrice model en amont (dans setParameters du fichier plane)
 	  //p.z += 3.0*sin(timer*10.0);
 	  
           gl_Position = uProjMatrix * uViewMatrix * uModelMatrix * vec4(p, 1.0);
@@ -231,7 +232,6 @@
 	  // outColor = vec4(alpha*maCouleur,alpha);
       }
     </script>
-
 
 
   </head>

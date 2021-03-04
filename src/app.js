@@ -1,5 +1,6 @@
 var background;
 var spaceship;
+var enemy;
 var shootSample = [];
 
 let cooldown = 0;
@@ -37,9 +38,17 @@ function drawScene() {
     }
 
     shootSample = alive;
-
-    gl.disable(gl.BLEND);
+    
+    
   }
+
+  if (enemy) {
+    gl.useProgram(enemy.shader());
+    enemy.sendUniformVariables();
+    enemy.draw();
+  } 
+
+  gl.disable(gl.BLEND);
 
   // dessin du vaisseau
   gl.useProgram(spaceship.shader());
@@ -83,11 +92,11 @@ function handleKeys() {
     spaceship.move(0, -1);
   }
 
-  if (currentlyPressedKeys[77]) {
-    // M
-    // juste un test pour supprimer un splat (tir)
-    shootSample.clear();
-  }
+    if (currentlyPressedKeys[77]) {
+      enemy = new Enemy();
+
+      enemy.setPosition(0.5,0.9,0.8);
+    }
 
   if (currentlyPressedKeys[32] && cooldown <= 0) {
     // SPACE
@@ -153,6 +162,7 @@ function webGLStart() {
   initBackgroundShader();
   initModelShader();
   initSplatShader();
+  initEnemyShader();
 
   //heightfield = new Heightfield();
   background = new Background();
