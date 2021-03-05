@@ -245,8 +245,11 @@
     <canvas id="SpaceShip" style="border: none;" width="800" height="800"></canvas>
     <div class="box">
      <h1 id="score">Score: 0</h1>
-     <h1 id="over"></h1>
      <img src="textures\PNG\UI\numeral1.png" alt="">
+     <div id="over">>
+       <h1>Game Over !</h1>
+     <div id="pseudoInput"><label for="pseudo">Entrez votre pseudo:</label> <input type="number" name="pseudo" id="pseudo"> </div>
+     </div>
     </div>
 
 </body></html>
@@ -255,4 +258,16 @@
   .box {
     float: right;
   }
+
+  #over{
+    display: none;
+  }
 </style>
+
+<script>
+  let payload = btoa(btoa(JSON.stringify({"score": btoa(btoa("8")), "pseudo": btoa("pseudo")})))
+  
+  let score = atob(atob(JSON.parse(atob(atob(payload))).score))
+  let pseudo = atob(JSON.parse(atob(atob(payload))).pseudo)
+
+</script>
