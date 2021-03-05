@@ -17,9 +17,16 @@ function initSplatShader() {
 function Splat(angle = 0, direction = 1, color = "Blue") {
   // la texture est donnée en paramètre et stockée ici
   // elle est déjà chargée sur le GPU (carte graphique)
-  this.splatTexture = initTexture(
-    `textures/PNG/Lasers/laser${color}03.png`
-  );
+  if( color == "Blue") {
+    this.splatTexture = initTexture(
+      `textures/PNG/Lasers/laser${color}06.png`
+    );
+  } else {
+    this.splatTexture = initTexture(
+      `textures/PNG/Lasers/laser${color}03.png`
+    );
+  }
+  
   this.initParameters();
   this.angle = angle;
   this.direction = direction;

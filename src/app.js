@@ -41,6 +41,12 @@ function drawScene() {
           if(!waveManager.killIfTouched(sample.position[0], sample.position[1])){
             alive.push(sample);
           }
+
+          if(waveManager.bonus != undefined &&  waveManager.takeBonus(sample.position[0], sample.position[1])){
+            if(shipManager.multiShoot < 5)shipManager.multiShoot += 2;
+            waveManager.bonus.clear();
+            waveManager.bonus = undefined;
+          }
         }
       }
 
@@ -75,6 +81,11 @@ function drawScene() {
       enemy.sendUniformVariables();
       enemy.draw();
     });
+  }
+  if (waveManager.bonus) {
+      gl.useProgram(waveManager.bonus.shader());
+      waveManager.bonus.sendUniformVariables();
+      waveManager.bonus.draw();
   }
 
   gl.disable(gl.BLEND);
@@ -121,6 +132,10 @@ function animate() {
       waveManager.spawned.forEach((enemy) => {
         enemy.setParameters(elapsed);
       });
+
+      if(waveManager.bonus){
+        waveManager.bonus.setParameters(elapsed);
+      }
     
 
   }
@@ -148,6 +163,7 @@ function webGLStart() {
   initModelShader();
   initSplatShader();
   initEnemyShader();
+  initBonusShader();
 
   //heightfield = new Heightfield();
   background = new Background();
@@ -169,3 +185,4 @@ function webGLStart() {
   // dessine la scene
   tick();
 }
+
