@@ -17,16 +17,10 @@ class ShipManager {
 
       let { x, y, z } = this.getCoords();
 
-      let newSplat = new Splat(20);
-      let newSplat2 = new Splat(-20);
-      let newSplat3 = new Splat();
+      let newSplat = new Splat();
       newSplat.setPosition(x, y, z);
-      newSplat2.setPosition(x, y, z);
-      newSplat3.setPosition(x, y, z);
 
       this.shootSamples.push(newSplat);
-      this.shootSamples.push(newSplat2);
-      this.shootSamples.push(newSplat3);
     }
   }
 
@@ -38,6 +32,22 @@ class ShipManager {
     var z = p[1][2] + 0.005; // profondeur du splat (juste derri�re le vaisseau)
 
     return { x, y, z };
+  }
+
+  isColliding(x, y){
+    let position = this.getCoords();
+    let hitbox = 0.0015;
+
+    let box = {
+      x1: position.x - hitbox,
+      x2: position.x + hitbox,
+      y1: position.y - hitbox*2,
+      y2: position.y + hitbox*2,
+    };
+
+    if(x > box.x1 && x < box.x2){
+      console.log("Collide !");
+    } 
   }
 }
 

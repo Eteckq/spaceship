@@ -11,15 +11,18 @@ function initSplatShader() {
   splatShader.texUniform = gl.getUniformLocation(splatShader, "uTex");
   splatShader.couleurUniform = gl.getUniformLocation(splatShader, "maCouleur");
 
-  console.log("splat shader initialized");
+  // console.log("splat shader initialized");
 }
 
-function Splat(angle = 0) {
+function Splat(angle = 0, direction = 1, color = "Blue") {
   // la texture est donnée en paramètre et stockée ici
   // elle est déjà chargée sur le GPU (carte graphique)
-  this.splatTexture = initTexture("textures/PNG/Lasers/laserBlue03.png");
+  this.splatTexture = initTexture(
+    `textures/PNG/Lasers/laser${color}03.png`
+  );
   this.initParameters();
   this.angle = angle;
+  this.direction = direction;
 
   this.scale = 0.2;
 
@@ -43,9 +46,9 @@ function Splat(angle = 0) {
   ];
 
   /*   if(this.angle !== 0){
-    console.log('non rotaté', vertices);
+    // console.log('non rotaté', vertices);
     mat4
-    console.log('rotaté', mat4.rotateX(vertices, this.angle));
+    // console.log('rotaté', mat4.rotateX(vertices, this.angle));
   } */
 
   var coords = [0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0];
@@ -83,7 +86,7 @@ function Splat(angle = 0) {
 
   this.loaded = true;
 
-  console.log("splat initialized");
+  // console.log("splat initialized");
 }
 
 Splat.prototype.shader = function () {
@@ -107,7 +110,7 @@ Splat.prototype.setParameters = function (elapsed) {
   this.time += 0.01 * elapsed;
   let speed = 0.5;
   // on peut animer les splats ici. Par exemple :
-  this.position[1] += speed * 0.05; // permet de déplacer le splat vers le haut au fil du temps
+  this.position[1] += speed * 0.05 * this.direction; // permet de déplacer le splat vers le haut au fil du temps
   this.position[0] += speed * 0.0007 * this.angle; // permet de déplacer le splat sur l'axe X
 };
 

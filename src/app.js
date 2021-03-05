@@ -32,12 +32,15 @@ function drawScene() {
       let alive = [];
 
       for (let sample of shipManager.shootSamples) {
-        if (sample.position[1] > 1.5) {
+        if (sample.position[1] > 1.5 || sample.position[1] < -1.5) {
           sample.clear();
         } else {
           alive.push(sample);
           sample.sendUniformVariables();
           sample.draw();
+
+          shipManager.isColliding(sample.position[0], sample.position[1]);
+          
         }
       }
 
@@ -83,6 +86,7 @@ function animate() {
     background.setParameters(elapsed);
     shipManager.shootSamples.forEach((sample) => {
       sample.setParameters(elapsed);
+      
     });
       waveManager.spawned.forEach((enemy) => {
         enemy.setParameters(elapsed);
@@ -98,6 +102,7 @@ function tick() {
   handleKeys();
   drawScene();
   animate();
+  waveManager.tick()
 }
 
 function webGLStart() {

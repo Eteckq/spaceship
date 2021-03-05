@@ -24,7 +24,7 @@ function initBackgroundShader() {
     "uPersistence"
   );
 
-  console.log("background shader initialized");
+  // console.log("background shader initialized");
 }
 
 function Background() {
@@ -79,7 +79,7 @@ function Background() {
 
   gl.bindVertexArray(null);
 
-  console.log("background initialized");
+  // console.log("background initialized");
 }
 
 Background.prototype.shader = function () {

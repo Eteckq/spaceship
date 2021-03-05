@@ -2,6 +2,8 @@ class WaveManager {
   difficulty = 0;
   spawned = [];
 
+  cooldown = 1000;
+
   constructor() {
       
   }
@@ -14,5 +16,9 @@ class WaveManager {
         this.spawned.push(enemy);
       }
     }
+  }
+
+  tick(){
+    this.cooldown--;
   }
 }

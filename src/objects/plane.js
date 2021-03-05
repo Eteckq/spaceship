@@ -21,7 +21,7 @@ function initModelShader() {
   );
   modelShader.timerUniform = gl.getUniformLocation(modelShader, "timer");
 
-  console.log("model shader initialized");
+  // console.log("model shader initialized");
 }
 
 function Model() {
@@ -68,15 +68,15 @@ Model.prototype.handleLoadedObject = function (objData) {
   var vertices = objData[0];
   var normals = objData[1];
 
-  console.log("Nb vertices: " + vertices.length / 3);
+  // console.log("Nb vertices: " + vertices.length / 3);
 
   this.computeBoundingBox(vertices);
-  console.log(
-    "BBox min: " + this.bbmin[0] + "," + this.bbmin[1] + "," + this.bbmin[2]
-  );
-  console.log(
-    "BBox max: " + this.bbmax[0] + "," + this.bbmax[1] + "," + this.bbmax[2]
-  );
+  // console.log(
+  //   "BBox min: " + this.bbmin[0] + "," + this.bbmin[1] + "," + this.bbmin[2]
+  // );
+  // console.log(
+  //   "BBox max: " + this.bbmax[0] + "," + this.bbmax[1] + "," + this.bbmax[2]
+  // );
 
   this.initParameters();
 
@@ -102,7 +102,7 @@ Model.prototype.handleLoadedObject = function (objData) {
 
   gl.bindVertexArray(null);
 
-  console.log("model initialized");
+  // console.log("model initialized");
   this.loaded = true;
 };
 
@@ -127,12 +127,15 @@ Model.prototype.initParameters = function () {
 };
 
 Model.prototype.setParameters = function (elapsed) {
-  // fonction appelée à chaque frame.
-  // mise à jour de la matrice modèle avec les paramètres de transformation
-  // les matrices view et projection ne changent pas
+  if (!this.position){
+    return
+  }
+    // fonction appelée à chaque frame.
+    // mise à jour de la matrice modèle avec les paramètres de transformation
+    // les matrices view et projection ne changent pas
 
-  // creation des matrices rotation/translation/scaling
-  var rMat = mat4.rotate(mat4.identity(), this.rotation, [0, 1, 0]);
+    // creation des matrices rotation/translation/scaling
+    var rMat = mat4.rotate(mat4.identity(), this.rotation, [0, 1, 0]);
   var tMat = mat4.translate(mat4.identity(), [
     this.position[0],
     this.position[1],
@@ -326,7 +329,7 @@ Model.prototype.load = function (filename) {
     }
   };
 
-  console.log("Loading Model <" + filename + ">...");
+  // console.log("Loading Model <" + filename + ">...");
 
   xmlhttp.open("GET", filename, true);
   xmlhttp.send();

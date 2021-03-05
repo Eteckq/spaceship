@@ -11,7 +11,7 @@ function initEnemyShader() {
   enemyShader.texUniform = gl.getUniformLocation(enemyShader, "uTex");
   enemyShader.couleurUniform = gl.getUniformLocation(enemyShader, "maCouleur");
 
-  console.log("enemy shader initialized");
+  // console.log("enemy shader initialized");
 }
 
 function Enemy() {
@@ -20,7 +20,7 @@ function Enemy() {
   this.enemyTexture = initTexture("textures/PNG/Enemies/enemyBlack1.png");
   this.initParameters();
 
-  this.scale = 0.3;
+  this.scale = 0.2;
 
   var wo2 = this.scale * this.width;
   var ho2 = this.scale * this.height;
@@ -40,12 +40,6 @@ function Enemy() {
     ho2,
     -0.8,
   ];
-
-  /*   if(this.angle !== 0){
-    console.log('non rotaté', vertices);
-    mat4
-    console.log('rotaté', mat4.rotateX(vertices, this.angle));
-  } */
 
   var coords = [0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0];
 
@@ -82,7 +76,7 @@ function Enemy() {
 
   this.loaded = true;
 
-  console.log("enemy initialized");
+  // console.log("enemy initialized");
 }
 
 Enemy.prototype.shader = function () {
@@ -96,18 +90,52 @@ Enemy.prototype.initParameters = function () {
   this.position = [0.0, 0.0, 0.0];
   this.couleur = [1, 0, 0];
   this.time = 0.0;
-  this.direction = Math.random() - 0.5;
+  this.directionX = Math.random() - 0.5;
+  this.directionY = Math.random() - 0.5;
 };
 
 Enemy.prototype.setPosition = function (x, y, z) {
   this.position = [x, y, z];
 };
 
+Enemy.prototype.shoot = function () {
+
+
+    let newSplat = new Splat(Math.random()*20 -10, -1, "Red");
+    newSplat.setPosition(this.position[0], this.position[1], this.position[2]);
+
+    shipManager.shootSamples.push(newSplat);
+}
+
 Enemy.prototype.setParameters = function (elapsed) {
   this.time += 0.01 * elapsed;
-  let speed = 0.1;
-  this.position[1] -= speed * 0.01;
-  this.position[0] -= speed * 0.01 * this.direction;
+  let speed = 0.8;
+
+  if (Math.round(Math.random() * 150) === 0) {
+    this.shoot();
+  }
+
+  if (Math.round(Math.random() * 1000) === 0) {
+    this.directionX = -this.directionX;
+  }
+  if (Math.round(Math.random() * 500) === 0) {
+    this.directionY = -this.directionY;
+  }
+
+  let newX = speed * 0.03 * this.directionX;
+  if (this.position[0] - newX < -1.2 || this.position[0] - newX > 1.2) {
+    this.directionX = -this.directionX;
+    newX = -newX;
+  }
+
+  let newY = speed * 0.01 * this.directionY;
+  if (this.position[1] - newY < -0.5 || this.position[1] - newY > 1.2) {
+    this.directionY = -this.directionY;
+    newY = -newY;
+  }
+
+  this.position[1] -= newY;
+  this.position[0] -= newX;
 };
 
 Enemy.prototype.sendUniformVariables = function () {
