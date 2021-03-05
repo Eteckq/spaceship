@@ -62,7 +62,7 @@ function drawScene() {
 
           if(shipManager.isColliding(sample.position[0], sample.position[1])){
             over = true
-            document.getElementById("over").innerHTML = "Fin de la partie !";
+            document.getElementById("over").style.display = "block";
           }
         }
       }
