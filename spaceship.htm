@@ -244,16 +244,25 @@
   <body onload="webGLStart();">
     <canvas id="SpaceShip" style="border: none;" width="800" height="800"></canvas>
     <div class="box">
-     <h1 id="score">Score: 0</h1>
+      <h1>Top players</h1>
+      <ul id="list">
+
+      </ul>
+      <div class="box">
+     <h1 >Score: <span id="score"></span></h1>
      <div id="over">>
-       <h1>Game Over !</h1>
-     <div id="pseudoInput"><label for="pseudo">Entrez votre pseudo:</label> <input type="number" name="pseudo" id="pseudo"> </div>
+        <h1>Game Over !</h1>
+        <div id="pseudoInput"><label for="pseudo">Entrez votre pseudo:</label> <input type="text" name="pseudo" id="pseudo"> </div>
+        <a onclick="send()" href="/">Send</a>
      </div>
     </div>
+    </div>
+    
 
 </body></html>
 
 <style>
+
   .box {
     float: right;
   }
@@ -264,9 +273,50 @@
 </style>
 
 <script>
-  let payload = btoa(btoa(JSON.stringify({"score": btoa(btoa("8")), "pseudo": btoa("pseudo")})))
-  
-  let score = atob(atob(JSON.parse(atob(atob(payload))).score))
-  let pseudo = atob(JSON.parse(atob(atob(payload))).pseudo)
+
+  const scores = getScores()
+
+
+
+  for(const score of scores){
+    var node = document.createElement('li');
+    node.appendChild(document.createTextNode(`${score.pseudo}: ${score.score}`));
+ 
+    document.getElementById('list').appendChild(node);
+
+  }
+
+  function getScores(){
+  var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", 'http://localhost:3000/scores', false ); // false for synchronous request
+    xmlHttp.send( null );
+    return JSON.parse(xmlHttp.responseText);
+  }
+function send(){
+    var http = new XMLHttpRequest();
+  var url = "http://localhost:3000/scores";
+  var params =
+    "payload=" +
+    btoa(
+      btoa(
+        JSON.stringify({
+          score: btoa(btoa(document.getElementById("score").innerHTML)),
+          pseudo: btoa(document.getElementById("pseudo").value),
+        })
+      )
+    );
+  http.open("POST", url, true);
+
+  //Send the proper header information along with the request
+  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+  http.onreadystatechange = function () {
+    //Call a function when the state changes.
+    if (http.readyState == 4 && http.status == 200) {
+      alert(http.responseText);
+    }
+  };
+  http.send(params);
+}
 
 </script>

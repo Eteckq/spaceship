@@ -31,7 +31,7 @@ class WaveManager {
         console.log("Dead !");
         killed = true;
         this.score++;
-        this.scoreInput.innerHTML="Score: " + this.score;
+    this.scoreInput.innerHTML = this.score;
       } else {
         alive.push(enemy);
       }
@@ -47,4 +47,6 @@ class WaveManager {
 
     this.cooldown--;
   }
+
+  
 }

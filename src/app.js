@@ -61,8 +61,7 @@ function drawScene() {
           sample.draw();
 
           if(shipManager.isColliding(sample.position[0], sample.position[1])){
-            over = true
-            document.getElementById("over").style.display = "block";
+            endGame();
           }
         }
       }
@@ -87,7 +86,12 @@ function drawScene() {
 }
 
 
+function endGame() {
+  over = true;
+  document.getElementById("over").style.display = "block";
 
+
+}
 
 
 function mouseMove(event) {
