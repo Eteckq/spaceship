@@ -1,7 +1,7 @@
 class WaveManager {
   wave = 0;
   spawned = [];
-
+  bonus = undefined;
   score = 0;
 
   cooldown = 500;
@@ -21,6 +21,11 @@ class WaveManager {
       enemy.setPosition(Math.random() * 1.5 - 0.8, 0.8, -0.9);
       this.spawned.push(enemy);
     }
+    if(Math.random()*100 <= 10){
+      this.bonus = new Bonus();
+      this.bonus.setPosition(Math.random() * 1.5 - 0.8, 0.8, -0.9);
+    }
+
   }
 
   killIfTouched(x, y) {
@@ -38,6 +43,15 @@ class WaveManager {
     }
     this.spawned = alive;
     return killed;
+  }
+
+  takeBonus(x,y){
+    let takeBonus = false;
+      if (this.bonus != undefined && this.bonus.isColliding(x, y)) {
+        console.log("Bonus !");
+        takeBonus = true;
+      }
+      return takeBonus;
   }
 
   tick() {
