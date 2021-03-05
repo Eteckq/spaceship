@@ -24,14 +24,34 @@ function drawScene() {
 
   gl.enable(gl.BLEND); // transparence activ�e
 
-
-    if (shipManager.shootSamples.length > 0) {
-      gl.enable(gl.BLEND); // transparence activ�e
-      gl.useProgram(shipManager.shootSamples[0].shader());
+    if (shipManager.playerShoots.length > 0) {
+      gl.useProgram(shipManager.playerShoots[0].shader());
 
       let alive = [];
 
-      for (let sample of shipManager.shootSamples) {
+      for (let sample of shipManager.playerShoots) {
+        if (sample.position[1] > 1.5 || sample.position[1] < -1.5) {
+          sample.clear();
+        } else {
+          
+          sample.sendUniformVariables();
+          sample.draw();
+
+          if(!waveManager.killIfTouched(sample.position[0], sample.position[1])){
+            alive.push(sample);
+          }
+        }
+      }
+
+      shipManager.playerShoots = alive;
+    }
+
+        if (shipManager.enemiesShoots.length > 0) {
+      gl.useProgram(shipManager.enemiesShoots[0].shader());
+
+      let alive = [];
+
+      for (let sample of shipManager.enemiesShoots) {
         if (sample.position[1] > 1.5 || sample.position[1] < -1.5) {
           sample.clear();
         } else {
@@ -40,11 +60,10 @@ function drawScene() {
           sample.draw();
 
           shipManager.isColliding(sample.position[0], sample.position[1]);
-          
         }
       }
 
-      shipManager.shootSamples = alive;
+      shipManager.enemiesShoots = alive;
     }
 
   if (waveManager.spawned.length > 0) {
@@ -84,10 +103,13 @@ function animate() {
     var elapsed = timeNow - lastTime;
     shipManager.spaceship.setParameters(elapsed);
     background.setParameters(elapsed);
-    shipManager.shootSamples.forEach((sample) => {
+    shipManager.playerShoots.forEach((sample) => {
       sample.setParameters(elapsed);
       
     });
+        shipManager.enemiesShoots.forEach((sample) => {
+          sample.setParameters(elapsed);
+        });
       waveManager.spawned.forEach((enemy) => {
         enemy.setParameters(elapsed);
       });

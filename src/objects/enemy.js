@@ -104,8 +104,25 @@ Enemy.prototype.shoot = function () {
     let newSplat = new Splat(Math.random()*20 -10, -1, "Red");
     newSplat.setPosition(this.position[0], this.position[1], this.position[2]);
 
-    shipManager.shootSamples.push(newSplat);
+    shipManager.enemiesShoots.push(newSplat);
 }
+
+Enemy.prototype.isColliding = function(x, y){
+    let pos = {x: this.position[0], y: this.position[1]};
+    let hitbox = 0.05;
+
+    let box = {
+      x1: pos.x - hitbox,
+      x2: pos.x + hitbox,
+      y1: pos.y - hitbox * 2,
+      y2: pos.y + hitbox * 2,
+    };
+
+    if (x > box.x1 && x < box.x2 && y > box.y1 && y < box.y2) {
+     return true
+    }
+    return false
+  }
 
 Enemy.prototype.setParameters = function (elapsed) {
   this.time += 0.01 * elapsed;
