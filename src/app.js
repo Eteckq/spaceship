@@ -1,12 +1,15 @@
 var background;
-var spaceship;
 var enemy;
-var shootSample = [];
+
 
 let cooldown = 0;
 
+var waveManager 
+var shipManager 
+
+
 function drawScene() {
-  cooldown--;
+  shipManager.cooldown--;
 
   // initialisation du viewport
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -21,105 +24,45 @@ function drawScene() {
 
   gl.enable(gl.BLEND); // transparence activ�e
 
-  if (shootSample.length > 0) {
-    gl.enable(gl.BLEND); // transparence activ�e
-    gl.useProgram(shootSample[0].shader());
 
-    let alive = [];
+    if (shipManager.shootSamples.length > 0) {
+      gl.enable(gl.BLEND); // transparence activ�e
+      gl.useProgram(shipManager.shootSamples[0].shader());
 
-    for (let sample of shootSample) {
-      if (sample.position[1] > 1.5) {
-        sample.clear();
-      } else {
-        alive.push(sample);
-        sample.sendUniformVariables();
-        sample.draw();
+      let alive = [];
+
+      for (let sample of shipManager.shootSamples) {
+        if (sample.position[1] > 1.5) {
+          sample.clear();
+        } else {
+          alive.push(sample);
+          sample.sendUniformVariables();
+          sample.draw();
+        }
       }
+
+      shipManager.shootSamples = alive;
     }
 
-    shootSample = alive;
-    
-    
+  if (waveManager.spawned.length > 0) {
+    waveManager.spawned.forEach((enemy) => {
+      gl.useProgram(enemy.shader());
+      enemy.sendUniformVariables();
+      enemy.draw();
+    });
   }
-
-  if (enemy) {
-    gl.useProgram(enemy.shader());
-    enemy.sendUniformVariables();
-    enemy.draw();
-  } 
 
   gl.disable(gl.BLEND);
 
   // dessin du vaisseau
-  gl.useProgram(spaceship.shader());
-  spaceship.sendUniformVariables();
-  spaceship.draw();
+  gl.useProgram(shipManager.spaceship.shader());
+  shipManager.spaceship.sendUniformVariables();
+  shipManager.spaceship.draw();
 }
 
-// une bonne maniere de gerer les evenements claviers
-var currentlyPressedKeys = {};
 
-function handleKeyDown(event) {
-  currentlyPressedKeys[event.keyCode] = true;
-}
 
-function handleKeyUp(event) {
-  currentlyPressedKeys[event.keyCode] = false;
-}
 
-function handleKeys() {
-  // vous pouvez utiliser ce genre de fonction
-  // pour faire bouger votre vaisseau
-  // par exemple :
-
-  if (currentlyPressedKeys[68]) {
-    // D
-    spaceship.move(1, 0);
-  }
-
-  if (currentlyPressedKeys[81]) {
-    // Q
-    spaceship.move(-1, 0);
-  }
-
-  if (currentlyPressedKeys[90]) {
-    // Z
-    spaceship.move(0, 1);
-  }
-
-  if (currentlyPressedKeys[83]) {
-    // S
-    spaceship.move(0, -1);
-  }
-
-    if (currentlyPressedKeys[77]) {
-      enemy = new Enemy();
-
-      enemy.setPosition(0.5,0.9,0.8);
-    }
-
-  if (currentlyPressedKeys[32] && cooldown <= 0) {
-    // SPACE
-    cooldown = 10;
-
-    // exemple: comment positionner un splat devant le vaisseau
-    var p = spaceship.getBBox(); // boite englobante du vaisseau sur l'�cran
-    var x = (p[0][0] + p[1][0]) / 2;
-    var y = p[1][1];
-    var z = p[1][2] + 0.005; // profondeur du splat (juste derri�re le vaisseau)
-
-    let newSplat = new Splat(20);
-    let newSplat2 = new Splat(-20);
-    let newSplat3 = new Splat();
-    newSplat.setPosition(x, y, z);
-    newSplat2.setPosition(x, y, z);
-    newSplat3.setPosition(x, y, z);
-
-    shootSample.push(newSplat);
-    shootSample.push(newSplat2);
-    shootSample.push(newSplat3);
-  }
-}
 
 function mouseMove(event) {
   // recup evenement souris
@@ -136,11 +79,16 @@ function animate() {
     // anime chacun des objets de la scene
     // si necessaire (en fonction du temps ecoul�)
     var elapsed = timeNow - lastTime;
-    spaceship.setParameters(elapsed);
+    shipManager.spaceship.setParameters(elapsed);
     background.setParameters(elapsed);
-    shootSample.forEach((sample) => {
+    shipManager.shootSamples.forEach((sample) => {
       sample.setParameters(elapsed);
     });
+      waveManager.spawned.forEach((enemy) => {
+        enemy.setParameters(elapsed);
+      });
+    
+
   }
   lastTime = timeNow;
 }
@@ -153,6 +101,7 @@ function tick() {
 }
 
 function webGLStart() {
+
   // initialisation du canvas et des objets OpenGL
   var canvas = document.getElementById("SpaceShip");
   initGL(canvas);
@@ -166,7 +115,9 @@ function webGLStart() {
 
   //heightfield = new Heightfield();
   background = new Background();
-  spaceship = new Model("models/plane.obj");
+  
+  waveManager = new WaveManager();
+  shipManager = new ShipManager();
 
   // la couleur de fond sera grise fonc�e
   gl.clearColor(0.3, 0.3, 0.3, 1.0);
@@ -177,12 +128,7 @@ function webGLStart() {
   // fonction de m�lange utilis�e pour la transparence
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-  /* Mouse and keyboard interaction functions */
-  //canvas.addEventListener('mousedown', tbMouseDown, true);
-  //canvas.addEventListener('mousemove', mouseMove, true);
-  //canvas.addEventListener('mouseup', tbMouseUp, true);
-  document.onkeydown = handleKeyDown;
-  document.onkeyup = handleKeyUp;
+  handleInputs();
 
   // dessine la scene
   tick();

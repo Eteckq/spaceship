@@ -24,7 +24,7 @@ function initModelShader() {
   console.log("model shader initialized");
 }
 
-function Model(filename) {
+function Model() {
   this.vertexBuffer = gl.createBuffer();
   this.vertexBuffer.itemSize = 0;
   this.vertexBuffer.numItems = 0;
@@ -40,7 +40,7 @@ function Model(filename) {
   this.bbmaxP = [0, 0, 0, 0];
   this.loaded = false;
 
-  this.load(filename);
+  this.load("models/plane.obj");
 }
 
 Model.prototype.computeBoundingBox = function (vertices) {

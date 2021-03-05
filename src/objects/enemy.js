@@ -96,6 +96,7 @@ Enemy.prototype.initParameters = function () {
   this.position = [0.0, 0.0, 0.0];
   this.couleur = [1, 0, 0];
   this.time = 0.0;
+  this.direction = Math.random() - 0.5;
 };
 
 Enemy.prototype.setPosition = function (x, y, z) {
@@ -105,7 +106,8 @@ Enemy.prototype.setPosition = function (x, y, z) {
 Enemy.prototype.setParameters = function (elapsed) {
   this.time += 0.01 * elapsed;
   let speed = 0.1;
-  this.position[1] -= speed * 0.05;
+  this.position[1] -= speed * 0.01;
+  this.position[0] -= speed * 0.01 * this.direction;
 };
 
 Enemy.prototype.sendUniformVariables = function () {
