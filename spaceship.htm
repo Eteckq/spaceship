@@ -288,13 +288,13 @@
 
   function getScores(){
   var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", 'http://localhost:3000/scores', false ); // false for synchronous request
+    xmlHttp.open( "GET", 'https://api-score.yohangastoud.fr/scores', false ); // false for synchronous request
     xmlHttp.send( null );
     return JSON.parse(xmlHttp.responseText);
   }
 function send(){
     var http = new XMLHttpRequest();
-  var url = "http://localhost:3000/scores";
+  var url = "https://api-score.yohangastoud.fr/scores";
   var params =
     "payload=" +
     btoa(
