@@ -1,6 +1,7 @@
 var background;
 var enemy;
 
+var over = false
 
 let cooldown = 0;
 
@@ -59,7 +60,9 @@ function drawScene() {
           sample.sendUniformVariables();
           sample.draw();
 
-          shipManager.isColliding(sample.position[0], sample.position[1]);
+          if(shipManager.isColliding(sample.position[0], sample.position[1])){
+            over = true
+          }
         }
       }
 
@@ -120,6 +123,7 @@ function animate() {
 }
 
 function tick() {
+  if(over) return;
   requestAnimFrame(tick);
   handleKeys();
   drawScene();

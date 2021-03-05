@@ -47,8 +47,10 @@ class ShipManager {
     };
 
     if (x > box.x1 && x < box.x2 && y > box.y1 && y < box.y2) {
-      console.count("Collide !");
+      return true
     }
+
+    return false
   }
 }
 
